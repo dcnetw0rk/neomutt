@@ -51,13 +51,13 @@ static struct ConfigDef PagerVars[] = {
   { "header_color_partial", DT_BOOL, false, 0, NULL,
     "Only color the part of the header matching the regex"
   },
-  { "pager", DT_STRING|D_STRING_COMMAND, IP "builtin", 0, NULL,
-    "External command for viewing messages, or 'builtin' to use NeoMutt's"
+  { "pager", DT_STRING|D_STRING_COMMAND, 0, 0, NULL,
+    "External command for viewing messages, or empty to use NeoMutt's"
   },
   { "pager_context", DT_NUMBER|D_INTEGER_NOT_NEGATIVE, 0, 0, NULL,
     "Number of lines of overlap when changing pages in the pager"
   },
-  { "pager_format", DT_EXPANDO, IP "-%Z- %C/%m: %-20.20n   %s%*  -- (%P)", IP IndexFormatDef, NULL,
+  { "pager_format", DT_EXPANDO, IP "-%Z- %C/%m: %-20.20n   %s%*  -- (%P)", IP &IndexFormatDef, NULL,
     "printf-like format string for the pager's status bar"
   },
   { "pager_index_lines", DT_NUMBER|D_INTEGER_NOT_NEGATIVE, 0, 0, NULL,

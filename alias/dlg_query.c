@@ -140,7 +140,7 @@ bool alias_to_addrlist(struct AddressList *al, struct Alias *alias)
 }
 
 /**
- * query_a - Query: Address - Implements ExpandoRenderData::get_string - @ingroup expando_get_string_api
+ * query_a - Query: Address - Implements ExpandoRenderData::get_string() - @ingroup expando_get_string_api
  */
 void query_a(const struct ExpandoNode *node, void *data, MuttFormatFlags flags,
              int max_cols, struct Buffer *buf)
@@ -155,7 +155,7 @@ void query_a(const struct ExpandoNode *node, void *data, MuttFormatFlags flags,
 }
 
 /**
- * query_c_num - Query: Index number - Implements ExpandoRenderData::get_number - @ingroup expando_get_number_api
+ * query_c_num - Query: Index number - Implements ExpandoRenderData::get_number() - @ingroup expando_get_number_api
  */
 long query_c_num(const struct ExpandoNode *node, void *data, MuttFormatFlags flags)
 {
@@ -165,7 +165,7 @@ long query_c_num(const struct ExpandoNode *node, void *data, MuttFormatFlags fla
 }
 
 /**
- * query_e - Query: Extra information - Implements ExpandoRenderData::get_string - @ingroup expando_get_string_api
+ * query_e - Query: Extra information - Implements ExpandoRenderData::get_string() - @ingroup expando_get_string_api
  */
 void query_e(const struct ExpandoNode *node, void *data, MuttFormatFlags flags,
              int max_cols, struct Buffer *buf)
@@ -178,7 +178,7 @@ void query_e(const struct ExpandoNode *node, void *data, MuttFormatFlags flags,
 }
 
 /**
- * query_n - Query: Name - Implements ExpandoRenderData::get_string - @ingroup expando_get_string_api
+ * query_n - Query: Name - Implements ExpandoRenderData::get_string() - @ingroup expando_get_string_api
  */
 void query_n(const struct ExpandoNode *node, void *data, MuttFormatFlags flags,
              int max_cols, struct Buffer *buf)
@@ -191,7 +191,7 @@ void query_n(const struct ExpandoNode *node, void *data, MuttFormatFlags flags,
 }
 
 /**
- * query_t_num - Query: Tagged char - Implements ExpandoRenderData::get_number - @ingroup expando_get_number_api
+ * query_t_num - Query: Tagged char - Implements ExpandoRenderData::get_number() - @ingroup expando_get_number_api
  */
 long query_t_num(const struct ExpandoNode *node, void *data, MuttFormatFlags flags)
 {
@@ -200,7 +200,7 @@ long query_t_num(const struct ExpandoNode *node, void *data, MuttFormatFlags fla
 }
 
 /**
- * query_t - Query: Tagged char - Implements ExpandoRenderData::get_string - @ingroup expando_get_string_api
+ * query_t - Query: Tagged char - Implements ExpandoRenderData::get_string() - @ingroup expando_get_string_api
  */
 void query_t(const struct ExpandoNode *node, void *data, MuttFormatFlags flags,
              int max_cols, struct Buffer *buf)
@@ -213,7 +213,7 @@ void query_t(const struct ExpandoNode *node, void *data, MuttFormatFlags flags,
 }
 
 /**
- * query_Y - Query: Tags - Implements ExpandoRenderData::get_string - @ingroup expando_get_string_api
+ * query_Y - Query: Tags - Implements ExpandoRenderData::get_string() - @ingroup expando_get_string_api
  */
 void query_Y(const struct ExpandoNode *node, void *data, MuttFormatFlags flags,
              int max_cols, struct Buffer *buf)
@@ -277,7 +277,8 @@ int query_run(const char *s, bool verbose, struct AliasList *al, const struct Co
   size_t buflen;
   char *msg = NULL;
   size_t msglen = 0;
-  char *p = NULL;
+  char *tok = NULL;
+  char *next_tok = NULL;
   struct Buffer *cmd = buf_pool_get();
 
   const char *const c_query_command = cs_subset_string(sub, "query_command");
@@ -300,22 +301,32 @@ int query_run(const char *s, bool verbose, struct AliasList *al, const struct Co
   msg = mutt_file_read_line(msg, &msglen, fp, NULL, MUTT_RL_NO_FLAGS);
   while ((buf = mutt_file_read_line(buf, &buflen, fp, NULL, MUTT_RL_NO_FLAGS)))
   {
-    p = strtok(buf, "\t\n");
-    if (p)
-    {
-      struct Alias *alias = alias_new();
+    tok = buf;
+    next_tok = strchr(tok, '\t');
+    if (next_tok)
+      *next_tok++ = '\0';
 
-      mutt_addrlist_parse(&alias->addr, p);
-      p = strtok(NULL, "\t\n");
-      if (p)
-      {
-        alias->name = mutt_str_dup(p);
-        p = strtok(NULL, "\t\n");
-        parse_alias_comments(alias, p);
-      }
-      TAILQ_INSERT_TAIL(al, alias, entries);
+    if (*tok == '\0')
+      continue;
+
+    struct Alias *alias = alias_new();
+
+    mutt_addrlist_parse(&alias->addr, tok);
+
+    if (next_tok)
+    {
+      tok = next_tok;
+      next_tok = strchr(tok, '\t');
+      if (next_tok)
+        *next_tok++ = '\0';
+
+      alias->name = mutt_str_dup(tok);
+      parse_alias_comments(alias, next_tok);
     }
+
+    TAILQ_INSERT_TAIL(al, alias, entries);
   }
+
   FREE(&buf);
   mutt_file_fclose(&fp);
   if (filter_wait(pid))

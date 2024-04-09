@@ -510,6 +510,8 @@
 ** .ts
 ** set certificate_file=~/.neomutt/certificates
 ** .te
+** .pp
+** (OpenSSL and GnuTLS only)
 */
 #endif
 
@@ -604,6 +606,19 @@
 ** .pp
 ** Note: This variable must be set before using any `color` commands.
 ** .pp
+*/
+
+{ "compose_confirm_detach_first", DT_BOOL, true },
+/*
+** .pp
+** When \fIset\fP, NeoMutt will prompt for confirmation when trying to use
+** \fC<detach-file>\fP on the first entry in the compose menu. This is to help
+** prevent irreversible loss of the typed message by accidentally hitting 'D' in
+** the menu.
+** .pp
+** Note: NeoMutt only prompts for the first entry.  It doesn't keep track of
+** which message is the typed message if the entries are reordered, or if the
+** first entry was already deleted.
 */
 
 { "compose_format", DT_STRING, "-- NeoMutt: Compose  [Approx. msg size: %l   Atts: %a]%>-" },
@@ -1173,7 +1188,7 @@
 /*
 ** .pp
 ** The file which includes random data that is used to initialize SSL
-** library functions.
+** library functions. (OpenSSL only)
 */
 #endif
 
@@ -2599,6 +2614,8 @@
 ** .dt %|X .dd pad to the end of the line with character "X"
 ** .dt %*X .dd soft-fill with character "X" as pad
 ** .de
+** .pp
+** (Mixmaster only)
 */
 
 { "mixmaster", D_STRING_COMMAND, MIXMASTER },
@@ -2607,7 +2624,7 @@
 ** This variable contains the path to the Mixmaster binary on your
 ** system.  It is used with various sets of parameters to gather the
 ** list of known remailers, and to finally send a message through the
-** mixmaster chain.
+** mixmaster chain. (Mixmaster only)
 */
 #endif
 
@@ -2893,11 +2910,11 @@
 ** connect to news server.
 */
 
-{ "pager", D_STRING_COMMAND, "builtin" },
+{ "pager", D_STRING_COMMAND, "" },
 /*
 ** .pp
 ** This variable specifies which pager you would like to use to view
-** messages. The value "builtin" means to use the built-in pager, otherwise this
+** messages. When empty, NeoMutt will use the built-in pager, otherwise this
 ** variable should specify the pathname of the external pager you would
 ** like to use.
 ** .pp
@@ -2949,8 +2966,7 @@
 ** marked as read.  A value of 0 results in the message being marked
 ** read unconditionally; for other values, navigating to another
 ** message or exiting the pager before the timeout will leave the
-** message marked unread.  This setting is ignored if $$pager is not
-** \fBbuiltin\fP.
+** message marked unread.  This setting is ignored if $$pager is set.
 */
 
 { "pager_skip_quoted_context", DT_NUMBER, 0 },
@@ -3890,11 +3906,14 @@
 { "reply_regex", DT_REGEX, "^((re|aw|sv)(\\[[0-9]+\\])*:[ \t]*)*" },
 /*
 ** .pp
-** A regular expression used to recognize reply messages when threading
-** and replying. The default value corresponds to the standard Latin "Re:"
-** prefix, the German "Aw:" or the Swedish "Sv:".  You can add your
-** own prefixes by swapping out or appending to that list.  For example:
-** \fC"^(re|se)"\fP or \fC"^(re|aw|se)"\fP.
+** A regular expression used to recognize reply messages when
+** threading and replying. The default value corresponds to the
+** standard Latin "Re:" prefix.
+** .pp
+** This value may have been localized by the translator for your
+** locale, adding other prefixes that are common in the locale. You
+** can add your own prefixes by appending inside \fC"^(re)"\fP.  For
+** example: \fC"^(re|sv)"\fP or \fC"^(re|aw|sv)"\fP.
 ** .pp
 ** The second parenthesized expression matches zero or more
 ** bracketed numbers following the prefix, such as \fC"Re[1]: "\fP.
@@ -3910,6 +3929,14 @@
 ** double quoted string.  If you use a single quoted string, you
 ** would have to type an actual tab character, and would need to
 ** convert the double-backslashes to single backslashes.
+** .pp
+** Note: the result of this regex match against the subject is
+** stored in the header cache.  Mutt isn't smart enough to
+** invalidate a header cache entry based on changing $$reply_regex,
+** so if you aren't seeing correct values in the index, try
+** temporarily turning off the header cache.  If that fixes the
+** problem, then once the variable is set to your liking, remove
+** your stale header cache files and turn the header cache back on.
 */
 
 { "reply_self", DT_BOOL, false },

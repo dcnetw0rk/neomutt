@@ -84,7 +84,6 @@ BUFFER_OBJS	= test/buffer/buf_add_printf.o \
 		  test/buffer/buf_join_str.o \
 		  test/buffer/buf_len.o \
 		  test/buffer/buf_lower.o \
-		  test/buffer/buf_make.o \
 		  test/buffer/buf_new.o \
 		  test/buffer/buf_printf.o \
 		  test/buffer/buf_reset.o \
@@ -308,7 +307,6 @@ FILE_OBJS	= test/file/common.o \
 		  test/file/mutt_file_map_lines.o \
 		  test/file/mutt_file_mkdir.o \
 		  test/file/mutt_file_open.o \
-		  test/file/mutt_file_quote_filename.o \
 		  test/file/mutt_file_read_keyword.o \
 		  test/file/mutt_file_read_line.o \
 		  test/file/mutt_file_rename.o \
