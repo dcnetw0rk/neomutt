@@ -9,9 +9,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: neomutt-2024-03-29\n"
+"Project-Id-Version: neomutt-2024-04-16\n"
 "Report-Msgid-Bugs-To: neomutt-devel@neomutt.org\n"
-"POT-Creation-Date: 2024-04-05 03:20+0100\n"
+"POT-Creation-Date: 2024-04-15 23:55+0100\n"
 "PO-Revision-Date: 2004-03-03 10:25+900\n"
 "Last-Translator: Im Eunjea <eunjea@kldp.org>\n"
 "Language-Team: Im Eunjea <eunjea@kldp.org>\n"
@@ -1122,7 +1122,7 @@ msgid "Error. Preserving temporary file: %s"
 msgstr "임시 파일을 저장하는 중 오류: %s"
 
 #. L10N: $compose_format default format
-#: compose/config.c:69
+#: compose/config.c:70
 msgid "-- NeoMutt: Compose  [Approx. msg size: %l   Atts: %a]%>-"
 msgstr ""
 
@@ -4311,8 +4311,8 @@ msgstr "자동 보기 명령 실행: %s"
 
 #: handler.c:598
 #, c-format
-msgid "[-- Can't run %s. --]\n"
-msgstr "[-- %s를 실행할 수 없음. --]\n"
+msgid "[-- Can't run %s --]\n"
+msgstr "[-- %s를 실행할 수 없음 --]\n"
 
 #: handler.c:624 handler.c:645
 #, c-format
@@ -4403,8 +4403,7 @@ msgstr "[-- 이름: %s --]\n"
 #, fuzzy, c-format
 msgid ""
 "[-- This %s/%s attachment is not included, --]\n"
-"[-- and the indicated external source has --]\n"
-"[-- expired. --]\n"
+"[-- and the indicated external source has expired --]\n"
 msgstr ""
 "[-- 이 %s/%s 첨부물은 포함되지 않음, --]\n"
 "[-- 지정된 외부 소스가 만기됨 --]\n"
@@ -4419,8 +4418,8 @@ msgstr ""
 "[-- 지정된 access-type %s는 지원되지 않음 --]\n"
 
 #: handler.c:1115
-msgid "[-- Error:  Could not display any parts of Multipart/Alternative --]\n"
-msgstr "[-- 오류:  Multipart/Alternative 부분을 표시 수 없음 --]\n"
+msgid "[-- Error: Could not display any parts of Multipart/Alternative --]\n"
+msgstr "[-- 오류: Multipart/Alternative 부분을 표시 수 없음 --]\n"
 
 #. L10N: %s is the attachment description, filename or form_name.
 #: handler.c:1269
@@ -6326,7 +6325,7 @@ msgstr ""
 #: ncrypt/crypt.c:1229
 #, c-format
 msgid ""
-"[-- Warning: We can't verify %s/%s signatures. --]\n"
+"[-- Warning: We can't verify %s/%s signatures --]\n"
 "\n"
 msgstr ""
 "[-- Warning: %s/%s 서명을 확인 할 수 없음 --]\n"
@@ -6342,7 +6341,7 @@ msgstr ""
 
 #: ncrypt/crypt.c:1249
 msgid ""
-"[-- Warning: Can't find any signatures. --]\n"
+"[-- Warning: Can't find any signatures --]\n"
 "\n"
 msgstr ""
 "[-- 경고: 서명을 찾을 수 없음. --]\n"
@@ -6608,7 +6607,7 @@ msgstr "[-- PGP 메일 끝 --]\n"
 
 #: ncrypt/crypt_gpgme.c:2680 ncrypt/pgp.c:750
 msgid "[-- END PGP PUBLIC KEY BLOCK --]\n"
-msgstr "[-- PGP 공개 열쇠 부분 끝--]\n"
+msgstr "[-- PGP 공개 열쇠 부분 끝 --]\n"
 
 #: ncrypt/crypt_gpgme.c:2682 ncrypt/pgp.c:754
 msgid "[-- END PGP SIGNED MESSAGE --]\n"
@@ -6884,16 +6883,16 @@ msgstr ""
 msgid "%s \"%s\""
 msgstr ""
 
-#: ncrypt/dlg_pgp.c:660
+#: ncrypt/dlg_pgp.c:668
 msgid "All matching keys are expired, revoked, or disabled"
 msgstr "모든 키가 만기/취소/사용 불가 입니다"
 
-#: ncrypt/dlg_pgp.c:705
+#: ncrypt/dlg_pgp.c:713
 #, c-format
 msgid "PGP keys matching <%s>"
 msgstr "PGP 키가 <%s>와 일치함"
 
-#: ncrypt/dlg_pgp.c:707
+#: ncrypt/dlg_pgp.c:715
 #, c-format
 msgid "PGP keys matching \"%s\""
 msgstr "PGP 키가 \"%s\"와 일치함"
@@ -7339,7 +7338,7 @@ msgstr ""
 #: ncrypt/smime.c:2021
 msgid ""
 "\n"
-"[-- End of S/MIME encrypted data. --]\n"
+"[-- End of S/MIME encrypted data --]\n"
 msgstr ""
 "\n"
 "[-- S/MIME 암호화 자료 끝 --]\n"
@@ -7347,7 +7346,7 @@ msgstr ""
 #: ncrypt/smime.c:2023
 msgid ""
 "\n"
-"[-- End of S/MIME signed data. --]\n"
+"[-- End of S/MIME signed data --]\n"
 msgstr ""
 "\n"
 "[-- S/MIME 서명 자료 끝 --]\n"
@@ -8796,11 +8795,11 @@ msgstr ""
 "바랍니다. NeoMutt은 공개 소프트웨어이며, 일정 사항만 지킨다면 여러분께서 자유\n"
 "로이 재배포할 수 있습니다. 자세한 사항은 'neomutt -vv'로 확인하시기 바랍니다.\n"
 
-#: version.c:480
+#: version.c:487
 msgid "Compile options:"
 msgstr "컴파일 선택사항:"
 
-#: version.c:485
+#: version.c:492
 #, fuzzy
 msgid "Devel options:"
 msgstr "컴파일 선택사항:"
