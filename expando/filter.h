@@ -1,9 +1,9 @@
 /**
  * @file
- * Pass files through external commands (filters)
+ * Expando filtering
  *
  * @authors
- * Copyright (C) 2020 Richard Russon <rich@flatcap.org>
+ * Copyright (C) 2023 Richard Russon <rich@flatcap.org>
  *
  * @copyright
  * This program is free software: you can redistribute it and/or modify it under
@@ -20,16 +20,15 @@
  * this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MUTT_MUTT_FILTER_H
-#define MUTT_MUTT_FILTER_H
+#ifndef MUTT_EXPANDO_FILTER_H
+#define MUTT_EXPANDO_FILTER_H
 
-#include <stdio.h>
-#include <unistd.h>
+#include "render.h"
 
-#define EXEC_SHELL "/bin/sh"
+struct Buffer;
+struct Expando;
 
-pid_t filter_create   (const char *cmd, FILE **fp_in, FILE **fp_out, FILE **fp_err, char **envlist);
-pid_t filter_create_fd(const char *cmd, FILE **fp_in, FILE **fp_out, FILE **fp_err, int fdin, int fdout, int fderr, char **envlist);
-int   filter_wait     (pid_t pid);
+int expando_filter(const struct Expando *exp, const struct ExpandoRenderData *rdata,
+                   void *data, MuttFormatFlags flags, int max_cols, struct Buffer *buf);
 
-#endif /* MUTT_MUTT_FILTER_H */
+#endif /* MUTT_EXPANDO_FILTER_H */

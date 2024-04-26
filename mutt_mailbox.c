@@ -255,6 +255,7 @@ bool mutt_mailbox_list(void)
   struct MailboxList ml = STAILQ_HEAD_INITIALIZER(ml);
   neomutt_mailboxlist_get_all(&ml, NeoMutt, MUTT_MAILBOX_ANY);
   struct MailboxNode *np = NULL;
+  bool any_new = false;
   STAILQ_FOREACH(np, &ml, entries)
   {
     /* Is there new mail in this mailbox? */
@@ -264,8 +265,10 @@ bool mutt_mailbox_list(void)
     buf_strcpy(path, mailbox_path(np->mailbox));
     buf_pretty_mailbox(path);
 
-    if (!buf_is_empty(mailboxlist))
+    if (any_new)
+    {
       buf_addstr(mailboxlist, ", ");
+    }
 
     if (!np->mailbox->notified)
     {
@@ -273,12 +276,13 @@ bool mutt_mailbox_list(void)
       MailboxNotify--;
     }
     buf_addstr(mailboxlist, buf_string(path));
+    any_new = true;
   }
   neomutt_mailboxlist_clear(&ml);
 
   buf_pool_release(&path);
 
-  if (!buf_is_empty(mailboxlist))
+  if (any_new)
   {
     mutt_message("%s", buf_string(mailboxlist));
     buf_pool_release(&mailboxlist);

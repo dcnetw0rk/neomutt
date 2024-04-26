@@ -524,37 +524,27 @@ int nntp_newsrc_update(struct NntpAccountData *adata)
  */
 static void cache_expand(char *dst, size_t dstlen, struct ConnAccount *cac, const char *src)
 {
-  char *c = NULL;
   char file[PATH_MAX] = { 0 };
 
   /* server subdirectory */
-  if (cac)
-  {
-    struct Url url = { 0 };
-
-    mutt_account_tourl(cac, &url);
-    url.path = mutt_str_dup(src);
-    url_tostring(&url, file, sizeof(file), U_PATH);
-    FREE(&url.path);
-  }
-  else
-  {
-    mutt_str_copy(file, src ? src : "", sizeof(file));
-  }
-
-  const char *const c_news_cache_dir = cs_subset_path(NeoMutt->sub, "news_cache_dir");
-  snprintf(dst, dstlen, "%s/%s", c_news_cache_dir, file);
+  struct Url url = { 0 };
+  mutt_account_tourl(cac, &url);
+  url.path = mutt_str_dup(src);
+  url_tostring(&url, file, sizeof(file), U_PATH);
+  FREE(&url.path);
 
   /* remove trailing slash */
-  c = dst + strlen(dst) - 1;
+  char *c = file + strlen(file) - 1;
   if (*c == '/')
     *c = '\0';
 
   struct Buffer *tmp = buf_pool_get();
-  buf_addstr(tmp, dst);
-  buf_expand_path(tmp);
-  mutt_encode_path(tmp, dst);
-  mutt_str_copy(dst, buf_string(tmp), dstlen);
+  buf_addstr(tmp, file);
+  mutt_encode_path(tmp, file);
+
+  const char *const c_news_cache_dir = cs_subset_path(NeoMutt->sub, "news_cache_dir");
+  snprintf(dst, dstlen, "%s/%s", c_news_cache_dir, buf_string(tmp));
+
   buf_pool_release(&tmp);
 }
 
@@ -1154,7 +1144,7 @@ struct NntpAccountData *nntp_select_server(struct Mailbox *m, const char *server
   {
     const struct Expando *c_newsrc = cs_subset_expando(NeoMutt->sub, "newsrc");
     struct Buffer *buf = buf_pool_get();
-    expando_render(c_newsrc, NntpRenderData, adata, MUTT_FORMAT_NO_FLAGS, buf->dsize, buf);
+    expando_filter(c_newsrc, NntpRenderData, adata, MUTT_FORMAT_NO_FLAGS, buf->dsize, buf);
     mutt_expand_path(buf->data, buf->dsize);
     adata->newsrc_file = buf_strdup(buf);
     buf_pool_release(&buf);
