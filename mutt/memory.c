@@ -30,11 +30,12 @@
  */
 
 #include "config.h"
+#include <errno.h>
 #include <stdlib.h>
+#include <string.h>
 #include "memory.h"
 #include "exit.h"
 #include "logging2.h"
-#include "message.h"
 
 /**
  * mutt_mem_calloc - Allocate zeroed memory on the heap
@@ -55,8 +56,8 @@ void *mutt_mem_calloc(size_t nmemb, size_t size)
   void *p = calloc(nmemb, size);
   if (!p)
   {
-    mutt_error(_("Out of memory")); // LCOV_EXCL_LINE
-    mutt_exit(1);                   // LCOV_EXCL_LINE
+    mutt_error("%s", strerror(errno)); // LCOV_EXCL_LINE
+    mutt_exit(1);                      // LCOV_EXCL_LINE
   }
   return p;
 }
@@ -95,8 +96,8 @@ void *mutt_mem_malloc(size_t size)
   void *p = malloc(size);
   if (!p)
   {
-    mutt_error(_("Out of memory")); // LCOV_EXCL_LINE
-    mutt_exit(1);                   // LCOV_EXCL_LINE
+    mutt_error("%s", strerror(errno)); // LCOV_EXCL_LINE
+    mutt_exit(1);                      // LCOV_EXCL_LINE
   }
   return p;
 }
@@ -131,8 +132,8 @@ void mutt_mem_realloc(void *ptr, size_t size)
   void *r = realloc(*p, size);
   if (!r)
   {
-    mutt_error(_("Out of memory")); // LCOV_EXCL_LINE
-    mutt_exit(1);                   // LCOV_EXCL_LINE
+    mutt_error("%s", strerror(errno)); // LCOV_EXCL_LINE
+    mutt_exit(1);                      // LCOV_EXCL_LINE
   }
 
   *p = r;

@@ -29,12 +29,13 @@
  */
 
 #include "config.h"
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h>
 #include "mutt/lib.h"
 #include "email/lib.h"
 #include "core/lib.h"

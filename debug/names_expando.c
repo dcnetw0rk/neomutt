@@ -21,7 +21,7 @@
  */
 
 #include "config.h"
-#include <assert.h>
+#include <stdbool.h>
 #include "email/lib.h"
 #include "core/lib.h"
 #include "alias/gui.h"
@@ -528,7 +528,8 @@ const char *name_expando_uid(enum ExpandoDomain did, int uid)
     case ED_SMIME_CMD:
       return name_expando_uid_smime_cmd(uid);
     default:
-      assert(false);
+      ASSERT(false);
+      return "UNKNOWN";
   }
 }
 

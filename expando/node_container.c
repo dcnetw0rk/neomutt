@@ -28,9 +28,8 @@
  */
 
 #include "config.h"
-#include <stddef.h>
-#include <assert.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include "mutt/lib.h"
 #include "node_container.h"
 #include "format.h"
@@ -45,7 +44,7 @@ int node_container_render(const struct ExpandoNode *node,
                           const struct ExpandoRenderData *rdata, struct Buffer *buf,
                           int max_cols, void *data, MuttFormatFlags flags)
 {
-  assert(node->type == ENT_CONTAINER);
+  ASSERT(node->type == ENT_CONTAINER);
 
   const struct ExpandoFormat *fmt = node->format;
   if (fmt)
@@ -57,7 +56,7 @@ int node_container_render(const struct ExpandoNode *node,
   struct ExpandoNode **enp = NULL;
   ARRAY_FOREACH(enp, &node->children)
   {
-    total_cols += node_tree_render(*enp, rdata, tmp, max_cols - total_cols, data, flags);
+    total_cols += node_render(*enp, rdata, tmp, max_cols - total_cols, data, flags);
   }
 
   if (fmt)

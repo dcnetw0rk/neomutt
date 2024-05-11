@@ -23,7 +23,6 @@
 #define TEST_NO_MAIN
 #include "config.h"
 #include "acutest.h"
-#include <assert.h>
 #include <stdio.h>
 #include "mutt/lib.h"
 #include "gui/lib.h"
@@ -42,7 +41,7 @@ struct SimpleExpandoData
 static void simple_s(const struct ExpandoNode *node, void *data,
                      MuttFormatFlags flags, int max_cols, struct Buffer *buf)
 {
-  assert(node->type == ENT_EXPANDO);
+  ASSERT(node->type == ENT_EXPANDO);
 
   const struct SimpleExpandoData *sd = data;
   struct NodeExpandoPrivate *priv = node->ndata;
@@ -56,7 +55,7 @@ static void simple_s(const struct ExpandoNode *node, void *data,
 static void simple_C(const struct ExpandoNode *node, void *data,
                      MuttFormatFlags flags, int max_cols, struct Buffer *buf)
 {
-  assert(node->type == ENT_EXPANDO);
+  ASSERT(node->type == ENT_EXPANDO);
 
   const struct SimpleExpandoData *sd = data;
   struct NodeExpandoPrivate *priv = node->ndata;
@@ -95,7 +94,7 @@ void test_expando_colors_render(void)
 
     const struct Expando expando = {
       .string = input,
-      .tree = root,
+      .node = root,
     };
 
     const struct ExpandoRenderData render[] = {
@@ -164,7 +163,7 @@ void test_expando_colors_render(void)
 
     const struct Expando expando = {
       .string = input,
-      .tree = root,
+      .node = root,
     };
 
     const struct ExpandoRenderData render[] = {
@@ -250,7 +249,7 @@ void test_expando_colors_render(void)
 
     const struct Expando expando = {
       .string = input,
-      .tree = root,
+      .node = root,
     };
 
     const struct ExpandoRenderData render[] = {
@@ -321,7 +320,7 @@ void test_expando_colors_render(void)
 
     const struct Expando expando = {
       .string = input,
-      .tree = root,
+      .node = root,
     };
 
     const struct ExpandoRenderData render[] = {

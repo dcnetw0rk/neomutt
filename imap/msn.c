@@ -28,8 +28,10 @@
  */
 
 #include "config.h"
+#include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <string.h>
 #include "mutt/lib.h"
 #include "msn.h"
 #include "mdata.h" // IWYU pragma: keep
@@ -46,7 +48,7 @@ void imap_msn_reserve(struct MSNArray *msn, size_t num)
    * if msn_count is this big, we have a serious problem. */
   if (num >= (UINT_MAX / sizeof(struct Email *)))
   {
-    mutt_error(_("Out of memory"));
+    mutt_error("%s", strerror(ENOMEM));
     mutt_exit(1);
   }
 

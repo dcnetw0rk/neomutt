@@ -33,8 +33,8 @@
  */
 
 #include "config.h"
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include "mutt/lib.h"
@@ -222,7 +222,8 @@ struct ExpandoNode *parse_index_hook(const char *str, const char **parsed_until,
 {
   if (flags & EP_CONDITIONAL)
   {
-    snprintf(error->message, sizeof(error->message), "index-hook cannot be used as a condition");
+    snprintf(error->message, sizeof(error->message),
+             _("index-hook cannot be used as a condition"));
     error->position = str;
     return NULL;
   }
@@ -275,7 +276,7 @@ struct ExpandoNode *parse_subject(const char *str, const char **parsed_until,
   node_cont->format = node_subj->format;
   node_subj->format = NULL;
 
-  node_set_child(node_cont, 0, node_tree);
+  ARRAY_ADD(&node_cont->children, node_tree);
   return node_cont;
 }
 
@@ -904,6 +905,10 @@ static struct ConfigDef MainVars[] = {
   { "xterm_icon",                DT_SYNONYM, IP "ts_icon_format",             IP "2021-03-21" },
   { "xterm_set_titles",          DT_SYNONYM, IP "ts_enabled",                 IP "2021-03-21" },
   { "xterm_title",               DT_SYNONYM, IP "ts_status_format",           IP "2021-03-21" },
+
+  { "devel_security", DT_BOOL, false, 0, NULL,
+    "Devel feature: Security -- https://github.com/neomutt/neomutt/discussions/4251"
+  },
 
   { NULL },
   // clang-format on

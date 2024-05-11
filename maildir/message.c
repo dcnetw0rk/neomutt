@@ -35,6 +35,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <utime.h>
 #include "mutt/lib.h"
@@ -552,7 +553,10 @@ bool maildir_msg_open_new(struct Mailbox *m, struct Message *msg, const struct E
   else
     mutt_str_copy(subdir, "new", sizeof(subdir));
 
-  mode_t omask = umask(maildir_umask(m));
+  mode_t new_umask = maildir_umask(m);
+  mode_t old_umask = umask(new_umask);
+  mutt_debug(LL_DEBUG3, "umask set to %03o\n", new_umask);
+
   while (true)
   {
     snprintf(path, sizeof(path), "%s/tmp/%s.%lld.R%" PRIu64 ".%s%s",
@@ -566,7 +570,8 @@ bool maildir_msg_open_new(struct Mailbox *m, struct Message *msg, const struct E
     {
       if (errno != EEXIST)
       {
-        umask(omask);
+        umask(old_umask);
+        mutt_debug(LL_DEBUG3, "umask set to %03o\n", old_umask);
         mutt_perror("%s", path);
         return false;
       }
@@ -578,7 +583,8 @@ bool maildir_msg_open_new(struct Mailbox *m, struct Message *msg, const struct E
       break;
     }
   }
-  umask(omask);
+  umask(old_umask);
+  mutt_debug(LL_DEBUG3, "umask set to %03o\n", old_umask);
 
   msg->fp = fdopen(fd, "w");
   if (!msg->fp)

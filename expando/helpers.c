@@ -28,10 +28,9 @@
  */
 
 #include "config.h"
-#include <stddef.h>
-#include <assert.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include "mutt/lib.h"
 #include "helpers.h"
 #include "definition.h"
@@ -144,7 +143,7 @@ const char *skip_until_classic_expando(const char *start)
  */
 const char *skip_classic_expando(const char *str, const struct ExpandoDefinition *defs)
 {
-  assert(str);
+  ASSERT(str);
   if (*str == '\0')
     return str;
 

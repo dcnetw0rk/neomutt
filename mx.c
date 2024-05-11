@@ -39,9 +39,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h>
 #include <unistd.h>
 #include "mutt/lib.h"
 #include "address/lib.h"
+#include "config/lib.h"
 #include "email/lib.h"
 #include "core/lib.h"
 #include "alias/lib.h"
@@ -913,7 +915,7 @@ enum MxStatus mx_mbox_sync(struct Mailbox *m)
   if (m->dontwrite)
   {
     char buf[512] = { 0 };
-    char tmp[256] = { 0 };
+    char tmp[768] = { 0 };
     if (km_expand_key(buf, sizeof(buf), km_find_func(MENU_INDEX, OP_TOGGLE_WRITE)))
       snprintf(tmp, sizeof(tmp), _(" Press '%s' to toggle write"), buf);
     else
@@ -1216,7 +1218,7 @@ void mx_alloc_memory(struct Mailbox *m, int req_size)
   const size_t s = MAX(sizeof(struct Email *), sizeof(int));
   if ((req_size * s) < (m->email_max * s))
   {
-    mutt_error(_("Out of memory"));
+    mutt_error("%s", strerror(ENOMEM));
     mutt_exit(1);
   }
 

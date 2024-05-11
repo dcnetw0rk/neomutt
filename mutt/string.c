@@ -31,7 +31,8 @@
 
 #include "config.h"
 #include <ctype.h>
-#include <stdarg.h>
+#include <errno.h>
+#include <stdarg.h> // IWYU pragma: keep
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,7 +41,6 @@
 #include "exit.h"
 #include "logging2.h"
 #include "memory.h"
-#include "message.h"
 #include "string2.h"
 #ifdef HAVE_SYSEXITS_H
 #include <sysexits.h>
@@ -255,7 +255,13 @@ char *mutt_str_dup(const char *str)
   if (!str || (*str == '\0'))
     return NULL;
 
-  return strdup(str);
+  char *p = strdup(str);
+  if (!p)
+  {
+    mutt_error("%s", strerror(errno)); // LCOV_EXCL_LINE
+    mutt_exit(1);                      // LCOV_EXCL_LINE
+  }
+  return p;
 }
 
 /**
@@ -778,8 +784,8 @@ int mutt_str_asprintf(char **strp, const char *fmt, ...)
    * is undefined when the return code is -1.  */
   if (n < 0)
   {
-    mutt_error(_("Out of memory")); /* LCOV_EXCL_LINE */
-    mutt_exit(1);                   /* LCOV_EXCL_LINE */
+    mutt_error("%s", strerror(errno)); /* LCOV_EXCL_LINE */
+    mutt_exit(1);                      /* LCOV_EXCL_LINE */
   }
 
   if (n == 0)

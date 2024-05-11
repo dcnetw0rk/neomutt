@@ -30,12 +30,11 @@
  */
 
 #include "config.h"
-#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <sys/stat.h>
-#include <unistd.h>
+#include <sys/types.h>
 #include "mutt/lib.h"
 #include "address/lib.h"
 #include "config/lib.h"
@@ -548,7 +547,7 @@ bool mutt_select_sort(bool reverse)
   }
   else
   {
-    assert((c_sort & SORT_MASK) != SORT_THREADS); /* See index_config_observer() */
+    ASSERT((c_sort & SORT_MASK) != SORT_THREADS); /* See index_config_observer() */
     /* Preserve the value of $sort, and toggle whether we are threaded. */
     switch (c_use_threads)
     {
@@ -565,7 +564,7 @@ bool mutt_select_sort(bool reverse)
                                       reverse ? UT_FLAT : UT_THREADS, NULL);
         break;
       default:
-        assert(false);
+        ASSERT(false);
     }
   }
 

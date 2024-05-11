@@ -29,6 +29,7 @@
 #include "config.h"
 #include <gsasl.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include "mutt/lib.h"
 #include "connaccount.h"
 #include "connection.h"

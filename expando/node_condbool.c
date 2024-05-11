@@ -28,7 +28,6 @@
  */
 
 #include "config.h"
-#include <assert.h>
 #include <stdio.h>
 #include "mutt/lib.h"
 #include "node_condbool.h"
@@ -65,14 +64,14 @@ struct ExpandoNode *node_condbool_new(const char *start, const char *end, int di
 /**
  * node_condbool_parse - Parse a CondBool format string - Implements ExpandoDefinition::parse() - @ingroup expando_parse_api
  */
-struct ExpandoNode *node_condbool_parse(const char *s, const char **parsed_until,
+struct ExpandoNode *node_condbool_parse(const char *str, const char **parsed_until,
                                         const struct ExpandoDefinition *defs,
                                         ExpandoParserFlags flags,
                                         struct ExpandoParseError *error)
 {
   const struct ExpandoDefinition *definition = defs;
 
-  const char *format_end = skip_until_classic_expando(s);
+  const char *format_end = skip_until_classic_expando(str);
   const char *expando_end = skip_classic_expando(format_end, defs);
   char expando[128] = { 0 };
   const int expando_len = expando_end - format_end;
@@ -84,7 +83,7 @@ struct ExpandoNode *node_condbool_parse(const char *s, const char **parsed_until
     {
       if (definition->parse)
       {
-        return definition->parse(s, parsed_until, definition->did,
+        return definition->parse(str, parsed_until, definition->did,
                                  definition->uid, flags, error);
       }
       else
@@ -112,7 +111,7 @@ int node_condbool_render(const struct ExpandoNode *node,
                          const struct ExpandoRenderData *rdata, struct Buffer *buf,
                          int max_cols, void *data, MuttFormatFlags flags)
 {
-  assert(node->type == ENT_CONDBOOL);
+  ASSERT(node->type == ENT_CONDBOOL);
 
   const struct ExpandoRenderData *rd_match = find_get_number(rdata, node->did, node->uid);
   if (rd_match)

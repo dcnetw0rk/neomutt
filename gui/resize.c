@@ -30,6 +30,7 @@
 
 #include "config.h"
 #include <fcntl.h>
+#include <stddef.h>
 #include <unistd.h>
 #include "mutt/lib.h"
 #include "mutt_curses.h"

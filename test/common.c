@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h>
 #include "mutt/lib.h"
 #include "config/lib.h"
 #include "core/lib.h"
@@ -316,3 +317,9 @@ bool subjrx_apply_mods(struct Envelope *env)
 {
   return false;
 }
+
+#ifdef USE_DEBUG_BACKTRACE
+void show_backtrace(void)
+{
+}
+#endif

@@ -23,7 +23,6 @@
 #define TEST_NO_MAIN
 #include "config.h"
 #include "acutest.h"
-#include <assert.h>
 #include <stdio.h>
 #include "mutt/lib.h"
 #include "expando/lib.h"
@@ -51,7 +50,7 @@ static void simple_c(const struct ExpandoNode *node, void *data,
 static void simple_f(const struct ExpandoNode *node, void *data,
                      MuttFormatFlags flags, int max_cols, struct Buffer *buf)
 {
-  assert(node->type == ENT_EXPANDO);
+  ASSERT(node->type == ENT_EXPANDO);
 
   const struct SimpleEmptyIfElseData *sd = data;
 
@@ -88,7 +87,7 @@ void test_expando_empty_if_else_render(void)
 
   const struct Expando expando = {
     .string = input,
-    .tree = root,
+    .node = root,
   };
 
   const struct ExpandoRenderData render[] = {

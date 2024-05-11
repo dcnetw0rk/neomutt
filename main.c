@@ -142,6 +142,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h>
 #include <unistd.h>
 #include "mutt/lib.h"
 #include "address/lib.h"
@@ -595,8 +596,6 @@ main
 
   init_locale();
 
-  umask(077);
-
   EnvList = envlist_init(envp);
   for (optind = 1; optind < double_dash;)
   {
@@ -754,6 +753,9 @@ main
 
   NeoMutt = neomutt_new(cs);
   init_config(cs);
+
+  // Change the current umask, and save the original one
+  NeoMutt->user_default_umask = umask(077);
   subjrx_init();
   attach_init();
   alternates_init();
@@ -791,6 +793,8 @@ main
   mutt_log_prep();
   MuttLogger = log_disp_queue;
   log_translation();
+  mutt_debug(LL_DEBUG1, "user's umask %03o\n", NeoMutt->user_default_umask);
+  mutt_debug(LL_DEBUG3, "umask set to 077\n");
 
   if (!STAILQ_EMPTY(&cc_list) || !STAILQ_EMPTY(&bcc_list))
   {
@@ -1334,8 +1338,7 @@ main
       {
         const char *const c_news_server = cs_subset_string(NeoMutt->sub, "news_server");
         OptNews = true;
-        struct Mailbox *m_cur = get_current_mailbox();
-        CurrentNewsSrv = nntp_select_server(m_cur, c_news_server, false);
+        CurrentNewsSrv = nntp_select_server(NULL, c_news_server, false);
         if (!CurrentNewsSrv)
           goto main_curses; // TEST38: neomutt -G (unset news_server)
       }
@@ -1345,8 +1348,7 @@ main
         goto main_curses; // TEST39: neomutt -n -F /dev/null -y
       }
       buf_reset(folder);
-      struct Mailbox *m_cur = get_current_mailbox();
-      dlg_browser(folder, MUTT_SEL_FOLDER | MUTT_SEL_MAILBOX, m_cur, NULL, NULL);
+      dlg_browser(folder, MUTT_SEL_FOLDER | MUTT_SEL_MAILBOX, NULL, NULL, NULL);
       if (buf_is_empty(folder))
       {
         goto main_ok; // TEST40: neomutt -y (quit selection)
