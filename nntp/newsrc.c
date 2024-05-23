@@ -577,8 +577,8 @@ int nntp_add_group(char *line, void *data)
   struct NntpMboxData *mdata = NULL;
   char group[1024] = { 0 };
   char desc[8192] = { 0 };
-  char mod;
-  anum_t first, last;
+  char mod = '\0';
+  anum_t first = 0, last = 0;
 
   if (!adata || !line)
     return 0;
@@ -722,7 +722,7 @@ struct HeaderCache *nntp_hcache_open(struct NntpMboxData *mdata)
   url.path = mdata->group;
   url_tostring(&url, file, sizeof(file), U_PATH);
   const char *const c_news_cache_dir = cs_subset_path(NeoMutt->sub, "news_cache_dir");
-  return hcache_open(c_news_cache_dir, file, nntp_hcache_namer);
+  return hcache_open(c_news_cache_dir, file, nntp_hcache_namer, true);
 }
 
 /**
@@ -781,8 +781,8 @@ void nntp_hcache_update(struct NntpMboxData *mdata, struct HeaderCache *hc)
 static int nntp_bcache_delete(const char *id, struct BodyCache *bcache, void *data)
 {
   struct NntpMboxData *mdata = data;
-  anum_t anum;
-  char c;
+  anum_t anum = 0;
+  char c = '\0';
 
   if (!mdata || (sscanf(id, ANUM_FMT "%c", &anum, &c) != 1) ||
       (anum < mdata->first_message) || (anum > mdata->last_message))
@@ -1146,7 +1146,7 @@ struct NntpAccountData *nntp_select_server(struct Mailbox *m, const char *server
     const struct Expando *c_newsrc = cs_subset_expando(NeoMutt->sub, "newsrc");
     struct Buffer *buf = buf_pool_get();
     expando_filter(c_newsrc, NntpRenderData, adata, MUTT_FORMAT_NO_FLAGS, buf->dsize, buf);
-    mutt_expand_path(buf->data, buf->dsize);
+    buf_expand_path(buf);
     adata->newsrc_file = buf_strdup(buf);
     buf_pool_release(&buf);
     rc = nntp_newsrc_parse(adata);
@@ -1198,7 +1198,7 @@ struct NntpAccountData *nntp_select_server(struct Mailbox *m, const char *server
         char *hdata = hcache_fetch_raw_str(hc, "index", 5);
         if (hdata)
         {
-          anum_t first, last;
+          anum_t first = 0, last = 0;
 
           if (sscanf(hdata, ANUM_FMT " " ANUM_FMT, &first, &last) == 2)
           {

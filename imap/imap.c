@@ -676,7 +676,7 @@ void imap_expunge_mailbox(struct Mailbox *m, bool resort)
   struct Email *e = NULL;
 
 #ifdef USE_HCACHE
-  imap_hcache_open(adata, mdata);
+  imap_hcache_open(adata, mdata, false);
 #endif
 
   for (int i = 0; i < m->msg_count; i++)
@@ -1220,7 +1220,7 @@ int imap_mailbox_status(struct Mailbox *m, bool queue)
  * @retval  0 Success
  * @retval -1 Failure
  */
-int imap_subscribe(char *path, bool subscribe)
+int imap_subscribe(const char *path, bool subscribe)
 {
   struct ImapAccountData *adata = NULL;
   struct ImapMboxData *mdata = NULL;
@@ -1529,7 +1529,7 @@ enum MxStatus imap_sync_mailbox(struct Mailbox *m, bool expunge, bool close)
   }
 
 #ifdef USE_HCACHE
-  imap_hcache_open(adata, mdata);
+  imap_hcache_open(adata, mdata, true);
 #endif
 
   /* save messages with real (non-flag) changes */

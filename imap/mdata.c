@@ -27,6 +27,7 @@
  */
 
 #include "config.h"
+#include <stdbool.h>
 #include "private.h"
 #include "core/lib.h"
 #include "mdata.h"
@@ -90,7 +91,7 @@ struct ImapMboxData *imap_mdata_new(struct ImapAccountData *adata, const char *n
   STAILQ_INIT(&mdata->flags);
 
 #ifdef USE_HCACHE
-  imap_hcache_open(adata, mdata);
+  imap_hcache_open(adata, mdata, false);
   if (mdata->hcache)
   {
     if (hcache_fetch_raw_obj(mdata->hcache, "UIDVALIDITY", 11, &mdata->uidvalidity))

@@ -40,7 +40,6 @@
 
 #include "config.h"
 #include <lauxlib.h>
-#include <limits.h>
 #include <lua.h>
 #include <lualib.h>
 #include <stdbool.h>
@@ -498,8 +497,6 @@ enum CommandResult mutt_lua_source_file(struct Buffer *buf, struct Buffer *s,
 
   lua_init(&LuaState);
 
-  char path[PATH_MAX] = { 0 };
-
   if (parse_extract_token(buf, s, TOKEN_NO_FLAGS) != 0)
   {
     buf_printf(err, _("source: error at %s"), s->dptr);
@@ -510,14 +507,19 @@ enum CommandResult mutt_lua_source_file(struct Buffer *buf, struct Buffer *s,
     buf_printf(err, _("%s: too many arguments"), "source");
     return MUTT_CMD_WARNING;
   }
-  mutt_str_copy(path, buf->data, sizeof(path));
-  mutt_expand_path(path, sizeof(path));
 
-  if (luaL_dofile(LuaState, path))
+  struct Buffer *path = buf_pool_get();
+  buf_copy(path, buf);
+  buf_expand_path(path);
+
+  if (luaL_dofile(LuaState, buf_string(path)))
   {
     mutt_error(_("Couldn't source lua source: %s"), lua_tostring(LuaState, -1));
     lua_pop(LuaState, 1);
+    buf_pool_release(&path);
     return MUTT_CMD_ERROR;
   }
+
+  buf_pool_release(&path);
   return MUTT_CMD_SUCCESS;
 }

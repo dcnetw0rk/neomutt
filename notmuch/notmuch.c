@@ -119,7 +119,7 @@ static struct HeaderCache *nm_hcache_open(struct Mailbox *m)
 {
 #ifdef USE_HCACHE
   const char *const c_header_cache = cs_subset_path(NeoMutt->sub, "header_cache");
-  return hcache_open(c_header_cache, mailbox_path(m), NULL);
+  return hcache_open(c_header_cache, mailbox_path(m), NULL, true);
 #else
   return NULL;
 #endif
@@ -987,10 +987,10 @@ static notmuch_threads_t *get_threads(notmuch_query_t *query)
   notmuch_threads_t *threads = NULL;
 #if LIBNOTMUCH_CHECK_VERSION(5, 0, 0)
   if (notmuch_query_search_threads(query, &threads) != NOTMUCH_STATUS_SUCCESS)
-    return false;
+    return NULL;
 #elif LIBNOTMUCH_CHECK_VERSION(4, 3, 0)
   if (notmuch_query_search_threads_st(query, &threads) != NOTMUCH_STATUS_SUCCESS)
-    return false;
+    return NULL;
 #else
   threads = notmuch_query_search_threads(query);
 #endif
